@@ -1,10 +1,18 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-# initialize the app
-app = Flask(__name__, instance_relative_config=True)
+# local imports
+from config import app_config
 
-# Load the views
-from app import views
+# db variable initialization
+db = SQLAlchemy()
 
 # Load the Config File
-app.config.from_object('config')
+def create_app(config_name):
+    # initialize the app
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config[config_name])
+    app.config.from_pyfile('config.py')
+    db.init_app(app)
+
+    return app

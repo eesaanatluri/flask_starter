@@ -28,4 +28,5 @@
 
 2. [Miguel's-Flask-mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) is a 23 chapter write up that covers most of the features of Flask.
 3. [Miguel's-Flask-workshop](https://www.youtube.com/watch?v=DIcpEg77gdE) - A three hour workshop from Pycon '15 about Flask by Miguel Grinberg himself. Follow this if you want to get to a quick start by watching a video
+3. [Miguel's-Flask-workshop](https://www.youtube.com/watch?v=DIcpEg77gdE) - A three hour workshop from Pycon '15 about Flask by Miguel Grinberg himself. Follow this if you want to get to a quick start by watching a video 
 4. [Corey Schafer's Flask tutorials](https://www.youtube.com/playlist?list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH) If you're bored of reading long text you can follow this series.

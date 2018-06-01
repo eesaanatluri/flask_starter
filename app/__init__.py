@@ -1,16 +1,16 @@
-from flask import Flask
+from flask import Flask, render_template, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
-from flask import Flask, render_template, abort
+from flask_mail import Mail
 
 # local imports
 from config import app_config
 
 # db variable initialization
 db = SQLAlchemy()
-
+mail = Mail()
 # creating login manager object
 login_manager = LoginManager()
 
@@ -22,6 +22,7 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
 
+    mail.init_app(app)
     Bootstrap(app)
     db.init_app(app)
 

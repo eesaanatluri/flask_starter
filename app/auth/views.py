@@ -6,6 +6,10 @@ from forms import LoginForm, RegistrationForm
 from .. import db
 from ..models import Employee
 
+from flask_mail import Message
+from app import mail
+
+
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     """
@@ -23,6 +27,18 @@ def register():
         # add employee to the database
         db.session.add(employee)
         db.session.commit()
+
+        def send_async_email(msg):
+            with app.app_context():
+            mail.send(msg)
+
+
+        def send_email(subject, recipients, text_body, html_body):
+            msg = Message(subject, recipients=recipients)
+            msg.body = text_body
+            msg.html = html_body
+            thr = Thread(target=send_async_email, args=[msg])
+            thr.start()
         flash('You have successfully registered! You may now login.')
 
         # redirect to the login page

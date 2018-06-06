@@ -39,7 +39,17 @@ def register():
             msg.html = html_body
             thr = Thread(target=send_async_email, args=[msg])
             thr.start()
-        flash('You have successfully registered! You may now login.')
+        flash('You have successfully registered! Please check your email to confirm your registration .')
+
+        def send_registration_verification_email(user):
+            token = user.get_confirmation_token()
+            send_email('Welcome to Research Computing',
+               sender=app.config['ADMINS'][0], #use a real email or set in FLASK_ENV
+               recipients=[user.email],
+               text_body=render_template('auth/registration_verification_email.txt',
+                                         user=user, token=token),
+               html_body=render_template('auth/registration_verification_email.html',
+                                         user=user, token=token))
 
         # redirect to the login page
         return redirect(url_for('auth.login'))

@@ -27,8 +27,8 @@ def register():
                             password=form.password.data)
 
         # add employee to the database
-        db.session.add(employee)
-        db.session.commit()
+        #db.session.add(employee)
+        #db.session.commit()
 
         def send_async_email(app, msg):
             with app.app_context():
@@ -52,8 +52,11 @@ def register():
                                          user=employee, token=token),
                html_body=render_template('auth/registration_verification_email.html',
                                          user=employee, token=token))
-
-
+	
+	if Employee.verify_confirmation_token(token):
+            db.session.add(employee)
+            db.session.commit()
+	
         # redirect to the login page
         return redirect(url_for('auth.login'))
 

@@ -30,7 +30,7 @@ def register():
         db.session.add(employee)
         db.session.commit()
 
-        def send_async_email(msg):
+        def send_async_email(app, msg):
             with app.app_context():
                 mail.send(msg)
 
@@ -39,7 +39,7 @@ def register():
             msg = Message(subject, recipients=recipients)
             msg.body = text_body
             msg.html = html_body
-            thr = Thread(target=send_async_email, args=[msg])
+            thr = Thread(target=send_async_email, args=[app, msg])
             thr.start()
         flash('You have successfully registered! Please check your email to confirm your registration .')
 

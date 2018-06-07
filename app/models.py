@@ -42,6 +42,22 @@ class Employee(UserMixin, db.Model):
         """
         return check_password_hash(self.password_hash, password)
 
+
+    def get_confirmation_token(self, expires_in=600):
+        return jwt.encode(
+            {'registration_token': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_confirmation_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['registration_token']
+        except:
+            return
+        return Employee.query.get(id)
+
+
     def __repr__(self):
         return '<Employee: {}>'.format(self.username)
 

@@ -9,6 +9,8 @@ from ..models import Employee
 from flask_mail import Message
 from app import mail
 
+from threading import Thread
+
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -30,7 +32,7 @@ def register():
 
         def send_async_email(msg):
             with app.app_context():
-            mail.send(msg)
+                mail.send(msg)
 
 
         def send_email(subject, recipients, text_body, html_body):
@@ -41,15 +43,16 @@ def register():
             thr.start()
         flash('You have successfully registered! Please check your email to confirm your registration .')
 
-        def send_registration_verification_email(user):
-            token = user.get_confirmation_token()
+        def send_registration_verification_email(employee):
+            token = Employee.get_confirmation_token()
             send_email('Welcome to Research Computing',
-               sender=app.config['ADMINS'][0], #use a real email or set in FLASK_ENV
-               recipients=[user.email],
+               #sender=app.config['ADMINS'][0], #use a real email or set in FLASK_ENV
+               recipients=[employee.email],
                text_body=render_template('auth/registration_verification_email.txt',
-                                         user=user, token=token),
+                                         user=employee, token=token),
                html_body=render_template('auth/registration_verification_email.html',
-                                         user=user, token=token))
+                                         user=employee, token=token))
+
 
         # redirect to the login page
         return redirect(url_for('auth.login'))

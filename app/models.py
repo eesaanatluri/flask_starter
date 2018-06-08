@@ -2,6 +2,9 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login_manager
+from time import time
+import jwt
+#import app
 
 class Employee(UserMixin, db.Model):
     """
@@ -43,7 +46,7 @@ class Employee(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-    def get_confirmation_token(self, expires_in=600):
+    def get_confirmation_token(self, expires_in=1200):
         return jwt.encode(
             {'registration_token': self.id, 'exp': time() + expires_in},
             app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')

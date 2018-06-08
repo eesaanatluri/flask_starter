@@ -8,7 +8,7 @@ from ..models import Employee
 
 from flask_mail import Message
 from app import mail
-
+import app
 from threading import Thread
 
 
@@ -25,12 +25,11 @@ def register():
                             first_name=form.first_name.data,
                             last_name=form.last_name.data,
                             password=form.password.data)
-
         # add employee to the database
-        #db.session.add(employee)
-        #db.session.commit()
+        db.session.add(employee)
+        db.session.commit()
 
-        def send_async_email(app, msg):
+        def send_async_email(msg):
             with app.app_context():
                 mail.send(msg)
 
@@ -39,24 +38,26 @@ def register():
             msg = Message(subject, recipients=recipients)
             msg.body = text_body
             msg.html = html_body
-            thr = Thread(target=send_async_email, args=[app, msg])
+            #mail.send(msg)
+            thr = Thread(target=send_async_email, args=[msg])
             thr.start()
         flash('You have successfully registered! Please check your email to confirm your registration .')
 
         def send_registration_verification_email(employee):
-            token = Employee.get_confirmation_token()
+            token = Employee.get_confirmation_token(employee)
             send_email('Welcome to Research Computing',
-               #sender=app.config['ADMINS'][0], #use a real email or set in FLASK_ENV
                recipients=[employee.email],
                text_body=render_template('auth/registration_verification_email.txt',
                                          user=employee, token=token),
                html_body=render_template('auth/registration_verification_email.html',
                                          user=employee, token=token))
-	
-	if Employee.verify_confirmation_token(token):
-            db.session.add(employee)
-            db.session.commit()
-	
+
+        send_registration_verification_email(employee)
+
+        #if Employee.verify_confirmation_token(token):
+        #    db.session.add(employee)
+        #    db.session.commit()
+
         # redirect to the login page
         return redirect(url_for('auth.login'))
 

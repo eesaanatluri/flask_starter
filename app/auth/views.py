@@ -62,6 +62,13 @@ def register():
     # load registration template
     return render_template('auth/register.html', form=form, title='Register')
 
+@auth.route('/confirm', methods=['GET', 'POST'])
+def confirm():
+    token = request.args.get('token')
+    userid = Employee.verify_confirmation_token(token)
+    if userid:
+        return redirect(url_for('auth.login'))
+        flash('Congrats! your account is ready and your token is verified. You can now login.')
 
 
 @auth.route('/login', methods=['GET', 'POST'])

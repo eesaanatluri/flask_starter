@@ -18,6 +18,7 @@ class RegistrationForm(FlaskForm):
                                         ])
     confirm_password = PasswordField('Confirm Password')
     submit = SubmitField('Register')
+    #AUP = CheckBox('aup', validators=[DataRequired()])
 
     def validate_email(self, field):
         if Employee.query.filter_by(email=field.data).first():

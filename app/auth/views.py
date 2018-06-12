@@ -8,9 +8,11 @@ from ..models import Employee
 
 from flask_mail import Message
 from app import mail
-import app
+
+from flask import current_app as app
 from threading import Thread
 
+from flask import request
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -29,18 +31,18 @@ def register():
         db.session.add(employee)
         db.session.commit()
 
-        def send_async_email(msg):
-            with app.app_context():
-                mail.send(msg)
+        #def send_async_email(msg):
+        #    with app.app_context():
+        #        mail.send(msg)
 
 
         def send_email(subject, recipients, text_body, html_body):
             msg = Message(subject, recipients=recipients)
             msg.body = text_body
             msg.html = html_body
-            #mail.send(msg)
-            thr = Thread(target=send_async_email, args=[msg])
-            thr.start()
+            mail.send(msg)
+            #thr = Thread(target=send_async_email, args=[msg])
+            #thr.start()
         flash('You have successfully registered! Please check your email to confirm your registration .')
 
         def send_registration_verification_email(employee):
@@ -54,15 +56,13 @@ def register():
 
         send_registration_verification_email(employee)
 
-        #if Employee.verify_confirmation_token(token):
-        #    db.session.add(employee)
-        #    db.session.commit()
-
         # redirect to the login page
         return redirect(url_for('auth.login'))
 
     # load registration template
     return render_template('auth/register.html', form=form, title='Register')
+
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,11 +1,12 @@
-Dear {{ user.username }},
-
-To verify your registration click on the link below:
-
-{{ url_for('auth.login', token=token, _external=True) }}
-
-If you decide not to receive messages simply ignore this message.
-
-Sincerely,
-
-Research Computing Team
+<p>Dear {{ user.username }},</p>
+<p>
+    To verify your registration
+    <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">
+        click here
+    </a>.
+</p>
+<p>Alternatively, you can paste the following link in your browser's address bar:</p>
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p>If you do not wish to proceed ignore this message.</p>
+<p>Sincerely,</p>
+<p>Research Computing Team</p>
